@@ -16,8 +16,7 @@ use crate::{
         object_environment_record::ObjectEnvironmentRecord,
     },
 };
-use gc::Gc;
-use gc_derive::{Finalize, Trace};
+use gc::{Finalize, Gc, Trace};
 use std::collections::HashSet;
 
 #[derive(Debug, Trace, Finalize, Clone)]

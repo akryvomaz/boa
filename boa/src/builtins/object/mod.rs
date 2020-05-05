@@ -21,11 +21,13 @@ use crate::{
     },
     exec::Interpreter,
 };
-use gc::{unsafe_empty_trace, Gc, Trace};
-use gc_derive::{Finalize, Trace};
-use std::fmt::{self, Debug};
-use std::fmt::{Display, Error, Formatter};
-use std::{borrow::Borrow, collections::HashMap, ops::Deref};
+use gc::{unsafe_empty_trace, Finalize, Gc, Trace};
+use std::{
+    borrow::Borrow,
+    collections::HashMap,
+    fmt::{self, Debug, Display, Error, Formatter},
+    ops::Deref,
+};
 
 pub use internal_methods_trait::ObjectInternalMethods;
 pub use internal_state::{InternalState, InternalStateCell};

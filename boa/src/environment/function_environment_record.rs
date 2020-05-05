@@ -16,8 +16,7 @@ use crate::{
         lexical_environment::{Environment, EnvironmentType},
     },
 };
-use gc::Gc;
-use gc_derive::{Finalize, Trace};
+use gc::{Finalize, Gc, Trace};
 use std::collections::hash_map::HashMap;
 
 /// Different binding status for `this`.
