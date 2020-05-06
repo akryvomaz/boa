@@ -170,7 +170,7 @@ impl ValueData {
     }
 
     /// Returns true if the value is a number
-    pub fn is_num(&self) -> bool {
+    pub fn is_number(&self) -> bool {
         self.is_double()
     }
 
@@ -205,7 +205,7 @@ impl ValueData {
     }
 
     /// Converts the value into a 64-bit floating point number
-    pub fn to_num(&self) -> f64 {
+    pub fn to_number(&self) -> f64 {
         match *self {
             Self::Object(_) | Self::Symbol(_) | Self::Undefined => NAN,
             Self::String(ref str) => match FromStr::from_str(str) {
@@ -220,7 +220,7 @@ impl ValueData {
     }
 
     /// Converts the value into a 32-bit integer
-    pub fn to_int(&self) -> i32 {
+    pub fn to_integer(&self) -> i32 {
         match *self {
             Self::Object(_)
             | Self::Undefined
@@ -629,7 +629,7 @@ impl ValueData {
     }
 
     pub fn as_num_to_power(&self, other: Self) -> Self {
-        Self::Rational(self.to_num().powf(other.to_num()))
+        Self::Rational(self.to_number().powf(other.to_number()))
     }
 }
 
@@ -864,8 +864,8 @@ impl PartialEq for ValueData {
             (Self::String(_), _) | (_, Self::String(_)) => self.to_string() == other.to_string(),
             (Self::Boolean(a), Self::Boolean(b)) if a == b => true,
             (Self::Rational(a), Self::Rational(b)) if a == b && !a.is_nan() && !b.is_nan() => true,
-            (Self::Rational(a), _) if a == other.to_num() => true,
-            (_, Self::Rational(a)) if a == self.to_num() => true,
+            (Self::Rational(a), _) if a == other.to_number() => true,
+            (_, Self::Rational(a)) if a == self.to_number() => true,
             (Self::Integer(a), Self::Integer(b)) if a == b => true,
             _ => false,
         }
@@ -880,62 +880,62 @@ impl Add for ValueData {
                 Self::String(format!("{}{}", s.clone(), &o.to_string()))
             }
             (ref s, Self::String(ref o)) => Self::String(format!("{}{}", s.to_string(), o)),
-            (ref s, ref o) => Self::Rational(s.to_num() + o.to_num()),
+            (ref s, ref o) => Self::Rational(s.to_number() + o.to_number()),
         }
     }
 }
 impl Sub for ValueData {
     type Output = Self;
     fn sub(self, other: Self) -> Self {
-        Self::Rational(self.to_num() - other.to_num())
+        Self::Rational(self.to_number() - other.to_number())
     }
 }
 impl Mul for ValueData {
     type Output = Self;
     fn mul(self, other: Self) -> Self {
-        Self::Rational(self.to_num() * other.to_num())
+        Self::Rational(self.to_number() * other.to_number())
     }
 }
 impl Div for ValueData {
     type Output = Self;
     fn div(self, other: Self) -> Self {
-        Self::Rational(self.to_num() / other.to_num())
+        Self::Rational(self.to_number() / other.to_number())
     }
 }
 impl Rem for ValueData {
     type Output = Self;
     fn rem(self, other: Self) -> Self {
-        Self::Rational(self.to_num() % other.to_num())
+        Self::Rational(self.to_number() % other.to_number())
     }
 }
 impl BitAnd for ValueData {
     type Output = Self;
     fn bitand(self, other: Self) -> Self {
-        Self::Integer(self.to_int() & other.to_int())
+        Self::Integer(self.to_integer() & other.to_integer())
     }
 }
 impl BitOr for ValueData {
     type Output = Self;
     fn bitor(self, other: Self) -> Self {
-        Self::Integer(self.to_int() | other.to_int())
+        Self::Integer(self.to_integer() | other.to_integer())
     }
 }
 impl BitXor for ValueData {
     type Output = Self;
     fn bitxor(self, other: Self) -> Self {
-        Self::Integer(self.to_int() ^ other.to_int())
+        Self::Integer(self.to_integer() ^ other.to_integer())
     }
 }
 impl Shl for ValueData {
     type Output = Self;
     fn shl(self, other: Self) -> Self {
-        Self::Integer(self.to_int() << other.to_int())
+        Self::Integer(self.to_integer() << other.to_integer())
     }
 }
 impl Shr for ValueData {
     type Output = Self;
     fn shr(self, other: Self) -> Self {
-        Self::Integer(self.to_int() >> other.to_int())
+        Self::Integer(self.to_integer() >> other.to_integer())
     }
 }
 impl Not for ValueData {
@@ -1011,7 +1011,7 @@ impl ToValue for f64 {
 }
 impl FromValue for f64 {
     fn from_value(v: Value) -> Result<Self, &'static str> {
-        Ok(v.to_num())
+        Ok(v.to_number())
     }
 }
 
@@ -1022,7 +1022,7 @@ impl ToValue for i32 {
 }
 impl FromValue for i32 {
     fn from_value(v: Value) -> Result<Self, &'static str> {
-        Ok(v.to_int())
+        Ok(v.to_integer())
     }
 }
 
@@ -1033,7 +1033,7 @@ impl ToValue for usize {
 }
 impl FromValue for usize {
     fn from_value(v: Value) -> Result<Self, &'static str> {
-        Ok(v.to_int() as Self)
+        Ok(v.to_integer() as Self)
     }
 }
 
@@ -1071,7 +1071,7 @@ impl<T: ToValue> ToValue for Vec<T> {
 
 impl<T: FromValue> FromValue for Vec<T> {
     fn from_value(v: Value) -> Result<Self, &'static str> {
-        let len = v.get_field_slice("length").to_int();
+        let len = v.get_field_slice("length").to_integer();
         let mut vec = Self::with_capacity(len as usize);
         for i in 0..len {
             vec.push(from_value(v.get_field_slice(&i.to_string()))?)

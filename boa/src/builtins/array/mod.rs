@@ -778,12 +778,12 @@ pub fn fill(this: &mut Value, args: &[Value], _: &mut Interpreter) -> ResultValu
     let len: i32 = from_value(this.get_field_slice("length")).expect("Could not get argument");
     let default_value = undefined();
     let value = args.get(0).unwrap_or(&default_value);
-    let relative_start = args.get(1).unwrap_or(&default_value).to_num() as i32;
+    let relative_start = args.get(1).unwrap_or(&default_value).to_number() as i32;
     let relative_end_val = args.get(2).unwrap_or(&default_value);
     let relative_end = if relative_end_val.is_undefined() {
         len
     } else {
-        relative_end_val.to_num() as i32
+        relative_end_val.to_number() as i32
     };
     let start = if relative_start < 0 {
         max(len + relative_start, 0)

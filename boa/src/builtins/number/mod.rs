@@ -88,7 +88,7 @@ pub fn call_number(_this: &mut Value, args: &[Value], _ctx: &mut Interpreter) ->
 /// [spec]: https://tc39.es/ecma262/#sec-number.prototype.toexponential
 /// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toExponential
 pub fn to_exponential(this: &mut Value, _args: &[Value], _ctx: &mut Interpreter) -> ResultValue {
-    let this_num = to_number(this).to_num();
+    let this_num = to_number(this).to_number();
     let this_str_num = num_to_exponential(this_num);
     Ok(to_value(this_str_num))
 }
@@ -104,10 +104,10 @@ pub fn to_exponential(this: &mut Value, _args: &[Value], _ctx: &mut Interpreter)
 /// [spec]: https://tc39.es/ecma262/#sec-number.prototype.tofixed
 /// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toFixed
 pub fn to_fixed(this: &mut Value, args: &[Value], _ctx: &mut Interpreter) -> ResultValue {
-    let this_num = to_number(this).to_num();
+    let this_num = to_number(this).to_number();
     let precision = match args.get(0) {
-        Some(n) => match n.to_int() {
-            x if x > 0 => n.to_int() as usize,
+        Some(n) => match n.to_integer() {
+            x if x > 0 => n.to_integer() as usize,
             _ => 0,
         },
         None => 0,
@@ -130,7 +130,7 @@ pub fn to_fixed(this: &mut Value, args: &[Value], _ctx: &mut Interpreter) -> Res
 /// [spec]: https://tc39.es/ecma262/#sec-number.prototype.tolocalestring
 /// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toLocaleString
 pub fn to_locale_string(this: &mut Value, _args: &[Value], _ctx: &mut Interpreter) -> ResultValue {
-    let this_num = to_number(this).to_num();
+    let this_num = to_number(this).to_number();
     let this_str_num = format!("{}", this_num);
     Ok(to_value(this_str_num))
 }
@@ -147,10 +147,10 @@ pub fn to_locale_string(this: &mut Value, _args: &[Value], _ctx: &mut Interprete
 /// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toPrecision
 pub fn to_precision(this: &mut Value, args: &[Value], _ctx: &mut Interpreter) -> ResultValue {
     let this_num = to_number(this);
-    let _num_str_len = format!("{}", this_num.to_num()).len();
+    let _num_str_len = format!("{}", this_num.to_number()).len();
     let _precision = match args.get(0) {
-        Some(n) => match n.to_int() {
-            x if x > 0 => n.to_int() as usize,
+        Some(n) => match n.to_integer() {
+            x if x > 0 => n.to_integer() as usize,
             _ => 0,
         },
         None => 0,
@@ -170,7 +170,7 @@ pub fn to_precision(this: &mut Value, args: &[Value], _ctx: &mut Interpreter) ->
 /// [spec]: https://tc39.es/ecma262/#sec-number.prototype.tostring
 /// [mdn]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/toString
 pub fn to_string(this: &mut Value, _args: &[Value], _ctx: &mut Interpreter) -> ResultValue {
-    Ok(to_value(format!("{}", to_number(this).to_num())))
+    Ok(to_value(format!("{}", to_number(this).to_number())))
 }
 
 /// `Number.prototype.toString()`
