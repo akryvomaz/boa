@@ -499,8 +499,9 @@ pub fn dir(this: &mut Value, args: &[Value], _: &mut Interpreter) -> ResultValue
 }
 
 /// Create a new `console` object
-pub fn create_constructor(global: &Value) -> Value {
+pub fn create(global: &Value) -> Value {
     let console = ValueData::new_obj(Some(global));
+
     make_builtin_fn!(assert, named "assert", of console);
     make_builtin_fn!(clear, named "clear", of console);
     make_builtin_fn!(debug, named "debug", of console);
@@ -521,5 +522,12 @@ pub fn create_constructor(global: &Value) -> Value {
     make_builtin_fn!(dir, named "dir", of console);
     make_builtin_fn!(dir, named "dirxml", of console);
     console.set_internal_state(ConsoleState::new());
+
     console
+}
+
+/// Initialise the `console` object on the global object.
+#[inline]
+pub fn init(global: &Value) {
+    global.set_field_slice("console", create(global));
 }

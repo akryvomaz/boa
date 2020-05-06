@@ -22,7 +22,7 @@ fn test_constructors() {
 #[test]
 fn check_regexp_constructor_is_function() {
     let global = ValueData::new_obj(None);
-    let regexp_constructor = create_constructor(&global);
+    let regexp_constructor = create(&global);
     assert_eq!(regexp_constructor.is_function(), true);
 }
 

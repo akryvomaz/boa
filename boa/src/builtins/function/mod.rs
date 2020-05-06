@@ -355,7 +355,14 @@ pub fn make_function(this: &mut Value, _: &[Value], _: &mut Interpreter) -> Resu
     Ok(this.clone())
 }
 
-pub fn create_constructor(global: &Value) -> Value {
-    let proto = ValueData::new_obj(Some(global));
-    make_constructor_fn!(make_function, make_function, global, proto)
+pub fn create(global: &Value) -> Value {
+    let prototype = ValueData::new_obj(Some(global));
+
+    make_constructor_fn!(make_function, make_function, global, prototype)
+}
+
+/// Initialise the `Function` object on the global object.
+#[inline]
+pub fn init(global: &Value) {
+    global.set_field_slice("Function", create(global));
 }

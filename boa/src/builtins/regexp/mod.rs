@@ -23,6 +23,9 @@ use crate::{
     exec::Interpreter,
 };
 
+#[cfg(test)]
+mod tests;
+
 /// The internal representation on a `RegExp` object.
 #[derive(Debug)]
 struct RegExp {
@@ -466,25 +469,28 @@ pub fn match_all(this: &mut Value, arg_str: String) -> ResultValue {
 }
 
 /// Create a new `RegExp` object.
-pub fn create_constructor(global: &Value) -> Value {
+pub fn create(global: &Value) -> Value {
     // Create prototype
-    let proto = ValueData::new_obj(Some(global));
-    proto.set_field_slice("lastIndex", to_value(0));
+    let prototype = ValueData::new_obj(Some(global));
+    prototype.set_field_slice("lastIndex", to_value(0));
 
-    make_builtin_fn!(test, named "test", with length 1, of proto);
-    make_builtin_fn!(exec, named "exec", with length 1, of proto);
-    make_builtin_fn!(to_string, named "toString", of proto);
-    make_builtin_fn!(get_dot_all, named "dotAll", of proto);
-    make_builtin_fn!(get_flags, named "flags", of proto);
-    make_builtin_fn!(get_global, named "global", of proto);
-    make_builtin_fn!(get_ignore_case, named "ignoreCase", of proto);
-    make_builtin_fn!(get_multiline, named "multiline", of proto);
-    make_builtin_fn!(get_source, named "source", of proto);
-    make_builtin_fn!(get_sticky, named "sticky", of proto);
-    make_builtin_fn!(get_unicode, named "unicode", of proto);
+    make_builtin_fn!(test, named "test", with length 1, of prototype);
+    make_builtin_fn!(exec, named "exec", with length 1, of prototype);
+    make_builtin_fn!(to_string, named "toString", of prototype);
+    make_builtin_fn!(get_dot_all, named "dotAll", of prototype);
+    make_builtin_fn!(get_flags, named "flags", of prototype);
+    make_builtin_fn!(get_global, named "global", of prototype);
+    make_builtin_fn!(get_ignore_case, named "ignoreCase", of prototype);
+    make_builtin_fn!(get_multiline, named "multiline", of prototype);
+    make_builtin_fn!(get_source, named "source", of prototype);
+    make_builtin_fn!(get_sticky, named "sticky", of prototype);
+    make_builtin_fn!(get_unicode, named "unicode", of prototype);
 
-    make_constructor_fn!(make_regexp, make_regexp, global, proto)
+    make_constructor_fn!(make_regexp, make_regexp, global, prototype)
 }
 
-#[cfg(test)]
-mod tests;
+/// Initialise the `RegExp` object on the global object.
+#[inline]
+pub fn init(global: &Value) {
+    global.set_field_slice("RegExp", create(global));
+}

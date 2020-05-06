@@ -589,7 +589,7 @@ pub fn has_own_prop(this: &mut Value, args: &[Value], _: &mut Interpreter) -> Re
 }
 
 /// Create a new `Object` object.
-pub fn create_constructor(_: &Value) -> Value {
+pub fn create(_: &Value) -> Value {
     let mut constructor_obj = Object::function();
     // Create the native function
     let constructor_fn = crate::builtins::function::Function::create_builtin(
@@ -610,4 +610,10 @@ pub fn create_constructor(_: &Value) -> Value {
     make_builtin_fn!(get_proto_of, named "getPrototypeOf", with length 1, of object);
     make_builtin_fn!(define_prop, named "defineProperty", with length 3, of object);
     object
+}
+
+/// Initialise the `Object` object on the global object.
+#[inline]
+pub fn init(global: &Value) {
+    global.set_field_slice("Object", create(global));
 }

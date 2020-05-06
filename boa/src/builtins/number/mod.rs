@@ -188,16 +188,22 @@ pub fn value_of(this: &mut Value, _args: &[Value], _ctx: &mut Interpreter) -> Re
 }
 
 /// Create a new `Number` object
-pub fn create_constructor(global: &Value) -> Value {
-    let number_prototype = ValueData::new_obj(Some(global));
-    number_prototype.set_internal_slot("NumberData", to_value(0));
+pub fn create(global: &Value) -> Value {
+    let prototype = ValueData::new_obj(Some(global));
+    prototype.set_internal_slot("NumberData", to_value(0));
 
-    make_builtin_fn!(to_exponential, named "toExponential", with length 1, of number_prototype);
-    make_builtin_fn!(to_fixed, named "toFixed", with length 1, of number_prototype);
-    make_builtin_fn!(to_locale_string, named "toLocaleString", of number_prototype);
-    make_builtin_fn!(to_precision, named "toPrecision", with length 1, of number_prototype);
-    make_builtin_fn!(to_string, named "toString", with length 1, of number_prototype);
-    make_builtin_fn!(value_of, named "valueOf", of number_prototype);
+    make_builtin_fn!(to_exponential, named "toExponential", with length 1, of prototype);
+    make_builtin_fn!(to_fixed, named "toFixed", with length 1, of prototype);
+    make_builtin_fn!(to_locale_string, named "toLocaleString", of prototype);
+    make_builtin_fn!(to_precision, named "toPrecision", with length 1, of prototype);
+    make_builtin_fn!(to_string, named "toString", with length 1, of prototype);
+    make_builtin_fn!(value_of, named "valueOf", of prototype);
 
-    make_constructor_fn!(make_number, call_number, global, number_prototype)
+    make_constructor_fn!(make_number, call_number, global, prototype)
+}
+
+/// Initialise the `Number` object on the global object.
+#[inline]
+pub fn init(global: &Value) {
+    global.set_field_slice("Number", create(global));
 }

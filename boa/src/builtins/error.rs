@@ -54,7 +54,7 @@ pub fn to_string(this: &mut Value, _: &[Value], _: &mut Interpreter) -> ResultVa
 }
 
 /// Create a new `Error` object.
-pub fn _create(global: &Value) -> Value {
+pub fn create(global: &Value) -> Value {
     let prototype = ValueData::new_obj(Some(global));
     prototype.set_field_slice("message", to_value(""));
     prototype.set_field_slice("name", to_value("Error"));
@@ -64,5 +64,5 @@ pub fn _create(global: &Value) -> Value {
 
 /// Initialise the global object with the `Error` object.
 pub fn init(global: &Value) {
-    global.set_field_slice("Error", _create(global));
+    global.set_field_slice("Error", create(global));
 }
